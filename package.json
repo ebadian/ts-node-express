@@ -4,21 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-sass": "sass src/styles:public/css --no-source-map"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@moduk/frontend": "^2.0.19",
+    "chokidar": "^3.3.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "nunjucks": "^3.2.4",
-    "chokidar": "^3.3.0"
+    "govuk-frontend": "^5.7.1",
+    "node-sass-middleware": "^1.1.0",
+    "nunjucks": "^3.2.4"
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.5",
+    "@types/node-sass-middleware": "^0.0.35",
     "@types/nunjucks": "^3.2.6",
-    "typescript": "^5.7.2"
+    "sass": "^1.83.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
   }
 }

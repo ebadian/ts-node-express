@@ -2,31 +2,69 @@ import express, { Express, Request, Response } from "express";
 
 import dotenv from "dotenv";
 import nunjucks from "nunjucks";
+import sassMiddleware from "node-sass-middleware";
 import path from "path"
+
+import { db } from "./db/inMemoryDb"
 
 dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-nunjucks.configure(path.join(__dirname, "views"),{
+const modukPath = path.join(__dirname, '../node_modules/@moduk/frontend/nunjucks');
+const govukPath = path.join(__dirname, '../node_modules/govuk-frontend/dist');
+
+const nunjucksPaths = [
+    path.join(__dirname, "views"), // Your views directory
+    modukPath,
+    govukPath
+];
+
+const env = nunjucks.configure(nunjucksPaths, {
     autoescape: true,
-    express:app,
-    watch: true
+    express: app,
+    watch: true,
+    noCache: true
 });
+
+//debuggig for paths
+console.log("Nunjucks search paths:", nunjucksPaths);
+
+async function initializeApp() {
+    try {
+        await db.loadFromFile('./resources/data.json')
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
+
+    app.listen(port, () => {
+        console.log(`Listening on port ${port}`);
+        console.log(db.getAccordionItems())
+    })
+}
+
+app.use(
+    sassMiddleware({
+        src: path.join(__dirname, "src/styles"),
+        dest: path.join(__dirname, "public/styles"),
+        outputStyle: "compressed",
+        prefix: "/styles",
+        includePaths: [path.join(__dirname, 'node_modules')]
+    })
+)
+
+app.use(express.static(path.join(__dirname,'public')));
 
 app.set("view engine", "njk");
 
 
 app.get("/", (req:Request, res:Response) => {
-    const data = {
-        title: "Hello World",
-        message: "Welcome to the World!"
-    }
-    res.render("index.njk", data)
+    res.render("index.njk", {
+        accordionItems: db.getAccordionItems()
+    })
 })
 
-app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
-})
+initializeApp().catch(console.error);
 
 

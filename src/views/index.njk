@@ -4,6 +4,16 @@
   <title>{{ title }}</title>
 </head>
 <body>
-  <h1>{{ message }}</h1>
+
+{# Option 1: Using the absolute path from the modukPath #}
+{% from "moduk/components/accordion/macro.njk" import modukAccordion %}
+
+
+{{ modukAccordion({
+  id: "accordion-default",
+  items: accordionItems 
+}) -}}
+
+
 </body>
 </html>
