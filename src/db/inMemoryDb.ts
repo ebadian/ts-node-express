@@ -19,7 +19,6 @@ class InMemoryDb {
         return this.data.accordion;
     }
 
- 
 }
 
 export const db = new InMemoryDb();

@@ -18,12 +18,13 @@ help:
 # Build target (compile TypeScript)
 build-app:
 	npx tsc
-
+	npm run build-sass
 #Build docker
 build-docker: build-app
 	docker build -t ts-node-express .
 
 build: build-docker
+
 # Run target (execute compiled JavaScript)
 run: build
 	node $(MAIN_FILE)

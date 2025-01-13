@@ -6,6 +6,7 @@ import sassMiddleware from "node-sass-middleware";
 import path from "path"
 
 import { db } from "./db/inMemoryDb"
+import { GridColumn } from "./types/gridColumn"
 
 dotenv.config();
 const app: Express = express();
@@ -62,6 +63,34 @@ app.set("view engine", "njk");
 app.get("/", (req:Request, res:Response) => {
     res.render("index.njk", {
         accordionItems: db.getAccordionItems()
+    })
+})
+
+app.get("/grid", (req:Request, res:Response) => {
+    
+    const columns: GridColumn[] = [
+        {
+            text: {
+                text: "This the first column text"
+            },
+            link: {
+                text: "This the first column link",
+                href: "/column1"
+            }
+        },
+        {
+            text: {
+                text: "This the second column text"
+            },
+            link: {
+                text: "This the second column link",
+                href: "/column2"
+            }
+        }
+      ];
+
+    res.render("grid.njk", {
+        gridColumns: columns
     })
 })
 
