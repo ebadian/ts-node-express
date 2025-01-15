@@ -40,3 +40,6 @@ dev:
 # Install target (install dependencies)
 install:
 	npm install
+
+build-sass:
+	npm run build-sass

@@ -1,23 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link href="/css/main.css" rel="stylesheet">
-</head>
-<body>
-<div class="govuk-grid-row govuk-!-margin-bottom-6">
-    {% for column in gridColumns %}
-          <div class="govuk-grid-column-one-third">
-            <h3 class="govuk-heading-m govuk-!-margin-bottom-2">
-              <a class="govuk-link govuk-link--no-visited-state" 
-              href="{{ column.link.href }}">
-                {{ column.link.text }}
-              </a>
-            </h3>
-            <p class="govuk-body-s">
-              {{ column.text.text }}
-            </p>
-          </div>
-    {% endfor %}
- </div>
-</body>
-</html>
+{% from "../components/grid.njk" import gridColumns %}
+
+
+{{ gridRow([
+  { content: '<p>First column</p>', width: 'one-third' },
+  { content: '<p>Second column</p>', width: 'one-third' },
+  { content: '<p>Third column</p>', width: 'one-third' }
+]) }}

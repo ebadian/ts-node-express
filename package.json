@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "preinstall": "nvm use || echo 'Please install the correct Node.js version using nvm'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-sass": "sass --load-path=node_modules src/styles:public/css --no-source-map"
+
   },
   "keywords": [],
   "author": "",
@@ -15,7 +17,7 @@
     "chokidar": "^3.3.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "govuk-frontend": "^5.7.1",
+    "govuk-frontend": "^5.8.0",
     "node-sass-middleware": "^1.1.0",
     "nunjucks": "^3.2.4"
   },
@@ -24,7 +26,7 @@
     "@types/node": "^22.10.5",
     "@types/node-sass-middleware": "^0.0.35",
     "@types/nunjucks": "^3.2.6",
-    "sass": "^1.83.0",
+    "sass": "1.69.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   }
