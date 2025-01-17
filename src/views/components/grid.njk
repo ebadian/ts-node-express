@@ -1,0 +1,19 @@
+{% macro gridColumns(columns, class="some class") -%}
+
+{% if not columns or columns.length <= 0 %}
+  <p class="govuk-body">No columns data available</p>
+{% endif %}
+
+<div class="govuk-grid-row {{ class }}">
+    {% for column in columns %}
+      <div class="govuk-grid-column-{{ column.width if column.width else 'one-third' }}">
+        <a href="{{ column.link.href }}">{{ column.link.text }}</a>
+        <p>{{ column.text.text }}</p>
+      </div>
+    {% endfor %}
+</div>
+
+{%- endmacro %}
+
+    
+

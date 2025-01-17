@@ -1,8 +1,7 @@
-{% from "../components/grid.njk" import gridColumns %}
+{% from "components/grid.njk" import gridColumns %}
 
 
-{{ gridRow([
-  { content: '<p>First column</p>', width: 'one-third' },
-  { content: '<p>Second column</p>', width: 'one-third' },
-  { content: '<p>Third column</p>', width: 'one-third' }
-]) }}
+
+{{
+  gridColumns(columns, class='other-class')
+}}

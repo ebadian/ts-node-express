@@ -68,7 +68,7 @@ app.get("/", (req:Request, res:Response) => {
 
 app.get("/grid", (req:Request, res:Response) => {
     
-    const columns: GridColumn[] = [
+    const contentColumns: GridColumn[] = [
         {
             text: {
                 text: "This the first column text"
@@ -90,10 +90,14 @@ app.get("/grid", (req:Request, res:Response) => {
       ];
 
     res.render("grid.njk", {
-        gridColumns: columns
+        columns: contentColumns
     })
 })
 
-initializeApp().catch(console.error);
+export { app };
+
+if (require.main === module) {
+    initializeApp().catch(console.error);
+  }
 
 
