@@ -8,6 +8,12 @@ import path from "path"
 import { db } from "./db/inMemoryDb"
 import { GridColumn } from "./types/gridColumn"
 
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import ReactApp from './views/App';
+
+
+
 dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
@@ -16,7 +22,6 @@ const modukPath = path.join(__dirname, '../node_modules/@moduk/frontend/nunjucks
 const govukPath = path.join(__dirname, '../node_modules/govuk-frontend/dist');
 
 app.use(express.static(path.join(__dirname, "../public"), { index: false }));
-// app.use('/styles', express.static(path.join(__dirname, "../public/styles")));
 
 
 const nunjucksPaths = [
@@ -62,10 +67,10 @@ app.use(
 )
 
 
-
-
-
 app.set("view engine", "njk");
+
+app.set('views', path.join(__dirname, 'src/views'));
+
 
 app.get('/styles/main.css', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/styles/main.css'));
@@ -76,6 +81,23 @@ app.get("/", (req:Request, res:Response) => {
         accordionItems: db.getAccordionItems()
     })
 })
+
+app.get('/react', (req, res) => {
+    const html = ReactDOMServer.renderToString(React.createElement(ReactApp));
+    res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <title>React App</title>
+        </head>
+        <body>
+          <div id="root">${html}</div>
+          <script src="/client-bundle.js"></script>
+        </body>
+      </html>
+    `);
+});
 
 app.get("/grid", (req:Request, res:Response) => {
     
