@@ -15,6 +15,10 @@ const port = process.env.PORT || 3000;
 const modukPath = path.join(__dirname, '../node_modules/@moduk/frontend/nunjucks');
 const govukPath = path.join(__dirname, '../node_modules/govuk-frontend/dist');
 
+app.use(express.static(path.join(__dirname, "../public"), { index: false }));
+// app.use('/styles', express.static(path.join(__dirname, "../public/styles")));
+
+
 const nunjucksPaths = [
     path.join(__dirname, "views"), // Your views directory
     modukPath,
@@ -27,6 +31,8 @@ const env = nunjucks.configure(nunjucksPaths, {
     watch: true,
     noCache: true
 });
+
+
 
 //debuggig for paths
 console.log("Nunjucks search paths:", nunjucksPaths);
@@ -55,10 +61,15 @@ app.use(
     })
 )
 
-app.use(express.static(path.join(__dirname,'public')));
+
+
+
 
 app.set("view engine", "njk");
 
+app.get('/styles/main.css', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/styles/main.css'));
+  });
 
 app.get("/", (req:Request, res:Response) => {
     res.render("index.njk", {
