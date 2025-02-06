@@ -10,7 +10,10 @@ import { GridColumn } from "./types/gridColumn"
 
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
-import ReactApp from './views/App';
+import LinkedH3 from './views/components/LinkedH3';
+import ColumnText from './views/components/ColumnText';
+import ColumnTextWrapper,  { ColumnTextWrapperProps } from './views/components/Column';
+import RowHeader from "./views/components/RowHeader";
 
 
 
@@ -83,19 +86,68 @@ app.get("/", (req:Request, res:Response) => {
 })
 
 app.get('/react', (req, res) => {
-    const html = ReactDOMServer.renderToString(React.createElement(ReactApp));
+
+    const content = {
+    
+    
+        columnTextWrappers: [
+        { 
+        heading: "Defence Service Manual", 
+        href: "https://www.digital.mod.uk/service-manual",
+        text:"some text",
+        longText: "Check the standards you need to follow and how to design and deliver great services in Defence."
+      },
+      {
+        heading: "Defence Service Manual", 
+        href: "https://www.digital.mod.uk/service-manual",
+        text:"some text",
+        longText: "Check the standards you need to follow and how to design and deliver great services in Defence.", 
+      },
+      {
+        heading: "Defence Service Manual", 
+        href: "https://www.digital.mod.uk/service-manual",
+        text:"some text",
+        longText: "Check the standards you need to follow and how to design and deliver great services in Defence.", 
+      }
+    ],
+    rowHeader: { rowHeaderText: "Defence Service Manual" },
+    }
+
+
+    const renderColumnTextWrappers = (data: ColumnTextWrapperProps[]) => {
+       return data.map((item, index) => (
+            React.createElement(ColumnTextWrapper, {
+                key: index,
+                ...item
+            })
+        ));
+    };
+
+
+    const firstRow = React.createElement("div", null,
+         React.createElement(RowHeader,content.rowHeader), 
+         renderColumnTextWrappers(content.columnTextWrappers)
+         );
+
+
+   
+    const html = ReactDOMServer.renderToString( React.createElement("div", null, firstRow));
+
     res.send(`
-      <!DOCTYPE html>
-      <html>
+    <!DOCTYPE html>
+    <html>
         <head>
-          <meta charset="UTF-8" />
-          <title>React App</title>
+            <meta charset="UTF-8" />
+            <title>React App</title>
+            <link rel="stylesheet" href="/styles/main.css">
+            <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+            <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
         </head>
         <body>
-          <div id="root">${html}</div>
-          <script src="/client-bundle.js"></script>
+            <div id="root">${html}</div>
+
         </body>
-      </html>
+    </html>
     `);
 });
 
