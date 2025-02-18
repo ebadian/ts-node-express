@@ -1,30 +1,42 @@
 import React from 'react';
-import ColumnText from './ColumnText'; 
+import ColumnText from './ColumnText';
 import LinkedH3 from './LinkedH3';
 
+interface columnItem {
+  text: string,
+  href: string,
+  longText: string;
+}
+
 export interface ColumnTextWrapperProps {
-    text: string;
-    href: string;
-    longText: string;
-    columnTextClassName?: string;
-    wrapperClassName?: string;
-    headingClassName?: string;
-    linkClassName?: string;
+  columnItems: columnItem[];
+
+  columnTextClassName?: string;
+  wrapperClassName?: string;
+  headingClassName?: string;
+  linkClassName?: string;
 }
 
 const ColumnTextWrapper: React.FC<ColumnTextWrapperProps> = ({
-    text,
-    href,
-    longText,
-    columnTextClassName,
-    wrapperClassName='govuk-grid-column-one-third',
-    headingClassName,
-    linkClassName
+  columnItems,
+  columnTextClassName = 'govuk-body-s',
+  wrapperClassName = 'govuk-grid-row govuk-!-margin-bottom-6',
+  linkClassName = 'govuk-heading-m govuk-!-margin-bottom-2'
 }) => {
   return (
     <div className={wrapperClassName}>
-      <LinkedH3 text={text} href={href} headingClassName={headingClassName} linkClassName={linkClassName}/>
-      <ColumnText longText={longText} columnClassName={columnTextClassName}/>
+      {columnItems.map((columnItem, index) => (
+        <div className='govuk-grid-column-one-third'>
+          <React.Fragment key={index}>
+            <LinkedH3
+              text={columnItem.text}
+              href={columnItem.href}
+              headingClassName={linkClassName}
+            />
+            <ColumnText longText={columnItem.longText} columnClassName={columnTextClassName} />
+          </React.Fragment>
+        </div>
+      ))}
     </div>
   );
 };
