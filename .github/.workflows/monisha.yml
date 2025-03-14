@@ -1,0 +1,82 @@
+name: Calculate Deployment Metrics
+
+on:
+  workflow_dispatch:
+    inputs:
+      start_date:
+        description: 'Start date for commit details (yyyy-mm-dd)'
+        required: true
+      end_date:
+        description: 'End date for commit details (yyyy-mm-dd)'
+        required: true
+
+jobs:
+  calculate-deployment-count:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+    - name: Calculate Deployment Count & Breakdown Per Month
+      run: |
+        START_DATE=${{ github.event.inputs.start_date }}
+        END_DATE=${{ github.event.inputs.end_date }}
+        FILE_PATH="src\/services\/ContentService.ts"
+        
+        DEPLOYMENT_COUNT=$(git log --all --since="$START_DATE" --until="$END_DATE" --pretty=format: --name-only | grep "^$FILE_PATH" | wc -l)
+        echo "Deployment Count: $DEPLOYMENT_COUNT"
+        # Retrieve commit dates and file names
+
+        commit_info=$(git log --all --since="$START_DATE" --until="$END_DATE" --pretty=format:"%cd" --date=iso --name-only | grep -B 1 "$FILE_PATH" | grep -E "^[0-9]{4}-[0-9]{2}-[0-9]{2}" | awk '{print $1, $2}')
+        # Process commit info
+        while IFS= read -r line; do
+          if [[ "$line" =~ ^[0-9]{4}-[0-9]{2} ]]; then
+          current_month=$(echo "$line" | awk '{print substr($1, 1, 7)}')
+          month_deployments["$current_month"]=$((month_deployments["$current_month"] + 1))
+          fi
+        done <<< "$commit_info"
+
+        # Output the results in chronological order
+        for month in $(echo "${!month_deployments[@]}" | tr ' ' '\n' | sort -r); do
+          echo "$month number of deployments in the month: ${month_deployments[$month]}"
+        done
+
+  calculate-time-between-deployments:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Calculate Time Between Deployments
+      run: |
+        START_DATE=${{ github.event.inputs.start_date }}
+        END_DATE=${{ github.event.inputs.end_date }}
+        FILE_PATH="prod/digital-mod-uk-site/kustomization.yaml"
+
+        # Retrieve commit dates and file names, then filter by file path and remove timezone offset
+        commit_dates=$(git log --since="$START_DATE" --until="$END_DATE" --pretty=format:"%cd" --date=iso --name-only | grep -B 1 "$FILE_PATH" | grep -E "^[0-9]{4}-[0-9]{2}-[0-9]{2}" | awk '{print $1, $2}')
+
+        # Initialize variables
+        previous_date=""
+        output=""
+
+        # Process commit dates from top to bottom (descending order)
+        while IFS= read -r current_date; do
+          if [ -n "$previous_date" ]; then
+            # Calculate the difference in seconds between consecutive commits
+            diff=$(( $(date -d "$previous_date" +%s) - $(date -d "$current_date" +%s) ))
+            # Convert seconds to a more readable format (days, hours, minutes)
+            days=$((diff / 86400))
+            hours=$(( (diff % 86400) / 3600 ))
+            minutes=$(( (diff % 3600) / 60 ))
+            output+="Date: $current_date\nTime since previous commit: $days days, $hours hours, $minutes minutes\n\n"
+          fi
+          previous_date="$current_date"
+        done <<< "$commit_dates"
+
+        # Output the results
+        echo -e "$output"
