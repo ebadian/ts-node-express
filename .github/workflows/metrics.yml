@@ -63,7 +63,7 @@ jobs:
       run: |
         START_DATE=${{ github.event.inputs.start_date }}
         END_DATE=${{ github.event.inputs.end_date }}
-        FILE_PATH="prod/digital-mod-uk-site/kustomization.yaml"
+         FILE_PATH="src/services/ContentService.ts"
 
         # Retrieve commit dates and file names, then filter by file path and remove timezone offset
         commit_dates=$(git log --since="$START_DATE" --until="$END_DATE" --pretty=format:"%cd" --date=iso --name-only -p "$FILE_PATH" | grep -E "^[0-9]{4}-[0-9]{2}-[0-9]{2}" | awk '{print $1, $2}')
