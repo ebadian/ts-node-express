@@ -20,6 +20,7 @@ jobs:
 
     - name: Calculate Deployment Count
       run: |
+        git log --all --since="$START_DATE" --until="$END_DATE" --pretty=format:"%cd" --date=short 
         START_DATE=${{ github.event.inputs.start_date }}
         END_DATE=${{ github.event.inputs.end_date }}
         echo "Deployment Count:" 
