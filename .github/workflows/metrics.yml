@@ -26,9 +26,9 @@ jobs:
       run: |
         START_DATE=${{ github.event.inputs.start_date }}
         END_DATE=${{ github.event.inputs.end_date }}
-        FILE_PATH="prod\/digital-mod-uk-site\/kustomization.yaml"
+        FILE_PATH="prod/digital-mod-uk-site/kustomization.yaml"
 
-        DEPLOYMENT_COUNT=$(git log --all --since="$START_DATE" --until="$END_DATE" --pretty=format: --name-only -p "$FILE_PATH" | grep -Ev "^$" | wc -l)
+        DEPLOYMENT_COUNT=$(git log --all --since="$START_DATE" --until="$END_DATE" --pretty=format:"%cd" --name-only -p "$FILE_PATH" | grep -Ev "^$" | wc -l)
         echo "Deployment Count: $DEPLOYMENT_COUNT"
         
         declare -A month_deployments
