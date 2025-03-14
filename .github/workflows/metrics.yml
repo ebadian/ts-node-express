@@ -16,8 +16,9 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
-
+      uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
     - name: Calculate Deployment Count & Breakdown Per Month
       run: |
         START_DATE=${{ github.event.inputs.start_date }}
