@@ -1,4 +1,4 @@
-name: Calculate Deployment Metrics
+name: MW Calculate Deployment Metrics
 
 on:
   workflow_dispatch:
