@@ -25,7 +25,7 @@ jobs:
 
 
         echo "Deployment Count:" 
-        git log --all --since="$START_DATE" --until="$END_DATE" --pretty=format:"%cd" --date=short 
+        git log --all --pretty=format:"%cd" --date=short 
 
 
 
