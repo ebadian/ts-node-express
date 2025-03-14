@@ -23,11 +23,9 @@ jobs:
         START_DATE=${{ github.event.inputs.start_date }}
         END_DATE=${{ github.event.inputs.end_date }}
 
-        echo $START_DATE
-        echo $END_DATE
+
         echo "Deployment Count:" 
-        git log --all --since="$START_DATE" --until="$END_DATE" --pretty=format:"%cd" --date=short | \
-        cut -c 1-7 | sort | uniq -c | awk '{ printf "%s => %d\n", $2, $1 }'
+        git log --all --since="$START_DATE" --until="$END_DATE" --pretty=format:"%cd" --date=short 
 
 
 
